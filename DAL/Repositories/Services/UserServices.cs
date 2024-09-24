@@ -137,14 +137,15 @@ namespace DAL.Repositories.Services
 
         public async Task<string> Delete(string userId)
         {
-            var user = await _peerLandingContext.MstUsers.FindAsync(userId);
-
-            var userName = user.Name;
+            var user = await _peerLandingContext.MstUsers.SingleOrDefaultAsync(user => user.Id == userId);
+            
 
             if (user == null)
             {
                 throw new Exception("User not found");
             }
+
+            var userName = user.Name;
 
             _peerLandingContext.MstUsers.Remove(user);
             await _peerLandingContext.SaveChangesAsync();

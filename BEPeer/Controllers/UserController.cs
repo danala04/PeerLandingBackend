@@ -22,7 +22,8 @@ namespace BEPeer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(ReqRegisterUserDto register)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> AddUser(ReqRegisterUserDto register)
         {
             try
             {
@@ -185,7 +186,7 @@ namespace BEPeer.Controllers
             {
                 if (ex.Message == "User not found")
                 {
-                    return NotFound(new ResBaseDto<string>
+                    return BadRequest(new ResBaseDto<string>
                     {
                         Success = false,
                         Message = ex.Message,
@@ -195,7 +196,7 @@ namespace BEPeer.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new ResBaseDto<string>
                 {
                     Success = false,
-                    Message = "Error.",
+                    Message = ex.Message,
                     Data = null
                 });
             }
