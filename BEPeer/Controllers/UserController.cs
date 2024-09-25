@@ -22,7 +22,6 @@ namespace BEPeer.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> AddUser(ReqRegisterUserDto register)
         {
             try

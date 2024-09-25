@@ -25,4 +25,8 @@
     <ProjectReference Include="..\BAL\BAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

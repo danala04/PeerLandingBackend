@@ -17,8 +17,7 @@ public partial class MstUser
 
     public decimal? Balance { get; set; }
 
-    public static implicit operator ValueTask(MstUser? v)
-    {
-        throw new NotImplementedException();
-    }
+    public List<MstLoans> MstLoans { get; set; } = new List<MstLoans>();
+
+    public List<TrnFunding> TrnFundings { get; set; } = new List<TrnFunding>();
 }
