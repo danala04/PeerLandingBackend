@@ -100,6 +100,31 @@ namespace BEPeer.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> GetUserById([FromQuery] string userId = null)
+        {
+            try
+            {
+                var users = await _userServices.GetUserById(userId);
+                return Ok(new ResBaseDto<ResUserByIdDto>
+                {
+                    Success = true,
+                    Message = "Get User Success!",
+                    Data = users
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResBaseDto<ResUserByIdDto>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Login(ReqLoginDto loginDto)
         {

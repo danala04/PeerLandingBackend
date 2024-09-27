@@ -84,6 +84,7 @@ namespace DAL.Repositories.Services
             var loginResponse = new ResLoginDto
             {
                 Token = token,
+                UserId = user.Id,
             };
 
             return loginResponse;
@@ -150,6 +151,27 @@ namespace DAL.Repositories.Services
             _peerLandingContext.MstUsers.Remove(user);
             await _peerLandingContext.SaveChangesAsync();
             return userName;
+        }
+
+        public async Task<ResUserByIdDto> GetUserById(string userId)
+        {
+            var user = await _peerLandingContext.MstUsers
+            .Where(user => user.Id == userId)
+            .Select(user => new ResUserByIdDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Role = user.Role,
+                Balance = user.Balance
+            })
+            .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            return user;
         }
     }
 }

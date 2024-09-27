@@ -111,5 +111,29 @@ namespace BEPeer.Controllers
                 });
             }
         }
+
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetAllLoanByUserId(string userId, [FromQuery] string status = null)
+        {
+            try
+            {
+                var response = await _loanServices.GetAllLoansByUserId(status, userId);
+                return Ok(new ResBaseDto<object>
+                {
+                    Data = response,
+                    Success = true,
+                    Message = "Success Get All Loans"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResBaseDto<string>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
+            }
+        }
     }
 }

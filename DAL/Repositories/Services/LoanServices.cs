@@ -43,7 +43,11 @@ namespace DAL.Repositories.Services
                 .Select(loan => new ResListLoanDto
                 {
                     LoanId = loan.Id,
-                    BorrowerName = loan.User.Name,
+                    User = new User
+                    {
+                        Id = loan.User.Id,
+                        Name = loan.User.Name
+                    },
                     Amount = loan.Amount,
                     InterestRate = loan.InterestRate,
                     Duration = loan.Duration,
@@ -51,6 +55,39 @@ namespace DAL.Repositories.Services
                     CreatedAt = loan.CreatedAt,
                     UpdatedAt = loan.UpdatedAt,
                 });
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                loansQuery = loansQuery.Where(loan => loan.Status == status);
+            }
+
+            loansQuery = loansQuery.OrderBy(loan => loan.CreatedAt);
+
+            Console.WriteLine(loansQuery);
+
+            return await loansQuery.ToListAsync();
+        }
+
+        public async Task<List<ResListLoanDto>> GetAllLoansByUserId(string status, string userId)
+        {
+            var loansQuery = _peerLandingContext.MstLoans
+                .Include(l => l.User)
+                .Select(loan => new ResListLoanDto
+                {
+                    LoanId = loan.Id,
+                    User = new User
+                    {
+                        Id = loan.User.Id,
+                        Name = loan.User.Name
+                    },
+                    Amount = loan.Amount,
+                    InterestRate = loan.InterestRate,
+                    Duration = loan.Duration,
+                    Status = loan.Status,
+                    CreatedAt = loan.CreatedAt,
+                    UpdatedAt = loan.UpdatedAt,
+                })
+                .Where(loan => loan.User.Id == userId);
 
             if (!string.IsNullOrEmpty(status))
             {

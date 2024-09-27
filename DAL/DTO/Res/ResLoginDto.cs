@@ -9,5 +9,6 @@ namespace DAL.DTO.Res
     public class ResLoginDto
     {
         public string Token { get; set; }
+        public string UserId { get; set; }
     }
 }
