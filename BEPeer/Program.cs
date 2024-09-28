@@ -76,6 +76,9 @@ builder.Services.AddDbContext<PeerlandingContext>(options =>
 
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<ILoanServices, LoanServices>();
+builder.Services.AddScoped<IFundingServices, FundingServices>();
+builder.Services.AddScoped<IRepaymentServices, RepaymentServices>();
+builder.Services.AddScoped<IMonthlyPaymentsServices, MonthlyRepaymentServices>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

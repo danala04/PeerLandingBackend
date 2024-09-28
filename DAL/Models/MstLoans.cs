@@ -47,5 +47,7 @@ namespace DAL.Models
         public MstUser User { get; set; }
 
         public List<TrnFunding> TrnFundings { get; set; } = new List<TrnFunding>();
+
+        public TrnRepayment TrnRepayment { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using DAL.DTO.Res;
 using DAL.Repositories.Services;
 using DAL.Repositories.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -76,7 +77,7 @@ namespace BEPeer.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,lender")]
         public async Task<IActionResult> GetAllUser()
         {
             try
@@ -101,7 +102,7 @@ namespace BEPeer.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,lender")]
         public async Task<IActionResult> GetUserById([FromQuery] string userId = null)
         {
             try
@@ -159,7 +160,7 @@ namespace BEPeer.Controllers
         }
 
         [HttpPut("{userId}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,lender")]
         public async Task<IActionResult> Update(string userId, ReqUpdateUserDto reqUpdate)
         {
             try

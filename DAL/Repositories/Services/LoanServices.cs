@@ -99,6 +99,36 @@ namespace DAL.Repositories.Services
             return await loansQuery.ToListAsync();
         }
 
+        public async Task<ResListLoanDto> GetLoanById(string loanId)
+        {
+            var loan = await _peerLandingContext.MstLoans
+                .Include(l => l.User)
+                .SingleOrDefaultAsync(l => l.Id == loanId);
+
+            if (loan == null)
+            {
+                throw new Exception("Loan not found");
+            }
+
+            var result = new ResListLoanDto
+            {
+                LoanId = loan.Id,
+                User = new User
+                {
+                    Id = loan.User.Id,
+                    Name = loan.User.Name
+                },
+                Amount = loan.Amount,
+                InterestRate = loan.InterestRate,
+                Duration = loan.Duration,
+                Status = loan.Status,
+                CreatedAt = loan.CreatedAt,
+                UpdatedAt = loan.UpdatedAt,
+            };
+
+            return result;
+        }
+
         public async Task<string> UpdateLoan(string loanId, ReqUpdateLoanDto reqpUpdate)
         {
             var existingLoan = await _peerLandingContext.MstLoans.SingleOrDefaultAsync(loan => loan.Id == loanId);
