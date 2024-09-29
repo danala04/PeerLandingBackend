@@ -1,6 +1,7 @@
 ﻿using DAL.DTO.Res;
 using DAL.Repositories.Services;
 using DAL.Repositories.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BEPeer.Controllers
@@ -17,6 +18,7 @@ namespace BEPeer.Controllers
         }
 
         [HttpGet("{loanId}")]
+        [Authorize]
         public async Task<IActionResult> GetRepaymentByLoanId(string loanId)
         {
             try

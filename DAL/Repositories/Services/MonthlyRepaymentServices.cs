@@ -28,19 +28,22 @@ namespace DAL.Repositories.Services
         public async Task<string> GenerateMonthlyPatments(string repaymentId)
         {
             var repayment = await _repaymentService.GetRepaymentById(repaymentId);
+            var loan = await _loanService.GetLoanById(repayment.LoanId);
 
             if (repayment == null)
             {
                 throw new Exception("No Repayment Detected!");
             }
 
-            for(int i = 1; i<12; i++)
+            for(int i = 1; i<=12; i++)
             {
+                var monthlyPayment = Utils.Utils.HitungCicilanBulanan(loan.Amount, loan.InterestRate, loan.Duration);
+
                 var data = new TrnMonthlyPayments
                 {
                     RepaymentId = repaymentId,
                     Status = false,
-                    Amount = repayment.Amount / 12,
+                    Amount = (decimal)monthlyPayment
                 };
 
                 await _peerLandingContext.AddAsync(data);
@@ -106,7 +109,7 @@ namespace DAL.Repositories.Services
 
                 await _userServices.Update(borrower.Id, new ReqUpdateUserDto
                 {
-                    Balance = borrower.Balance - payment.Amount
+                    Balance = Math.Max(0, (decimal)(borrower.Balance - payment.Amount))
                 });
 
                 var repaymenEdit = await _peerLandingContext.TrnRepayments
@@ -118,7 +121,28 @@ namespace DAL.Repositories.Services
                 }
 
                 repaymenEdit.RepaidAmount += payment.Amount;
-                repaymenEdit.BalanceAmount -= payment.Amount;
+
+                repaymenEdit.BalanceAmount = Math.Max(0, repaymenEdit.BalanceAmount - payment.Amount);
+
+                if ((repaymenEdit.RepaidAmount >= repaymenEdit.Amount) && (repaymenEdit.BalanceAmount <= repaymenEdit.Amount))
+                {
+                    repaymenEdit.RepaidStatus = "done";
+                    //await _loanService.UpdateLoan(loan.LoanId, new ReqUpdateLoanDto{
+                    //    Status = "repaid"
+                    //});
+
+                    var loanEdit = await _peerLandingContext.MstLoans
+                        .SingleOrDefaultAsync(l => l.Id == loan.LoanId);
+
+                    if (loan == null)
+                    {
+                        throw new Exception("loan not found");
+                    }
+
+                    loanEdit.Status = "repaid";
+                }
+
+                repaymenEdit.PaidAt = DateTime.UtcNow;
             }
 
             await _peerLandingContext.SaveChangesAsync();            

@@ -3,6 +3,7 @@ using DAL.DTO.Req;
 using DAL.DTO.Res;
 using DAL.Repositories.Services;
 using DAL.Repositories.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
 
@@ -20,6 +21,7 @@ namespace BEPeer.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddLoan(ReqLoanDto reqLoan)
         {
             try
@@ -65,6 +67,7 @@ namespace BEPeer.Controllers
         }
 
         [HttpPut("{loanId}")]
+        [Authorize]
         public async Task<IActionResult> UpdateLoan(string loanId, ReqUpdateLoanDto reqUpdate)
         {
             try
@@ -89,6 +92,7 @@ namespace BEPeer.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllLoan([FromQuery] string status = null)
         {
             try
@@ -113,6 +117,7 @@ namespace BEPeer.Controllers
         }
 
         [HttpGet("{userId}")]
+        [Authorize]
         public async Task<IActionResult> GetAllLoanByUserId(string userId, [FromQuery] string status = null)
         {
             try
@@ -137,6 +142,7 @@ namespace BEPeer.Controllers
         }
 
         [HttpGet("getById/{loanId}")]
+        [Authorize]
         public async Task<IActionResult> GetLoanById(string loanId)
         {
             try
