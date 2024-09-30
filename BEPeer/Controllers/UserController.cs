@@ -102,7 +102,7 @@ namespace BEPeer.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "admin,lender")]
+        [Authorize]
         public async Task<IActionResult> GetUserById([FromQuery] string userId = null)
         {
             try
